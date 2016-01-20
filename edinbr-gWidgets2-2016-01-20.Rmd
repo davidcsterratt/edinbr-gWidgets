@@ -8,14 +8,13 @@ output: ioslides_presentation
 ## What is gWidgets2?
 
 - gWidgets2 by John Verzani is a reworking of the earlier gWidgets package
-- Provides a toolkit-independent API for building interactive GUIs on
-  Windows, Mac and Linux
+- Provides a toolkit-independent API for building interactive GUIs on Windows, Mac and Linux
 - GTK2/3, Tk, Qt
-- At present GTK is the best supported toolkit on the three operating
-  systems
-- Requires gWidgetsRGtk2 and RGtk2 (Michael Lawrence)
+- At present GTK is the best supported toolkit on the three operating systems
+- Requires gWidgets2RGtk2 and RGtk2 (Michael Lawrence)
 - Programatic design
   - No GUI designer a la Matlab
+- API of gWidgets and gWidgets2 almost identical
 
 # Installation
 
@@ -29,6 +28,8 @@ sudo apt-get install libgtk2.0-dev
 - In R:
 ```{r, eval=FALSE}
 install.packages(c("gWidgets2RGtk2", "cairoDevice"))
+## May need dev version
+devtools::install_github("jverzani/gWidgets2RGtk2")
 ```
 
 ## Windows
@@ -37,14 +38,11 @@ install.packages(c("gWidgets2RGtk2", "cairoDevice"))
 install.packages(c("gWidgets2RGtk2", "cairoDevice"))
 library(gWidgets2RGtk2)
 ```
-- There will be an error message saying that libatk-1.0-0.dll is missing
-  from  your  computer.
+- There will be an error message saying that libatk-1.0-0.dll ismissing from your computer.
 - Click  on OK
-- Another  message  will  appear,  asking  if  you  want  to  install
-  GTK+.
+- Another  message  will  appear,  asking  if  you  want  to  install GTK+.
 - Agree to this.
-- After this has finished, quit R (without saving the workspace image) and
-  restart.
+- After this has finished, quit R (without saving the workspace image) and restart.
     
 ## Mac
 
@@ -53,15 +51,13 @@ library(gWidgets2RGtk2)
   - GTK binaries (should work for pre-Mavericks MacOS X)
   - MacPorts
   - HomeBrew
-- More details at:
-  https://github.com/davidcsterratt/retistruct/issues/4
+- More details at: https://github.com/davidcsterratt/retistruct/issues/4
 
 ## Concepts
 
 - __Widgets__: buttons, radio buttons, dropdown lists,  sliders, edit boxes ...
 - __Container__: where to place a widget
-- __Handler__: how a widget resopnds to events, e.g. button presses
-- __Action__: extra information passed to a handler
+- __Handler__: how a widget responds to events, e.g. button presses
 - __Method__: How to get and set widget values
 
 # Hello World
@@ -132,11 +128,82 @@ hello <- gbutton("Hello world", container=group,
                  })
 ```
 
-# Including graphics
+## Including graphics
+```{r, eval=FALSE}
+library(gWidgets2)
+options(guiToolkit="RGtk2")
+## cairoDevice allows plotting in GTK ggraphics widgets
+library(cairoDevice) 
+win <- gwindow("Hello World, the next generation")
+group <- ggroup(horizontal=FALSE, container=win)
 
-# Actions
+## Create an area for a graphics device
+g.d <- ggraphics(container=group, width=600, height=600)
+## Create the device in it
+d <- dev.cur()
+# Set the handler to plot
+obj <- gbutton("Plot", container = group,
+               handler=function(h, ...) {
+                 x <- rnorm(50)
+                 plot(density(x, adjust=1, kernel="gaussian"),
+                      main="Density plot")
+                 rug(x)
+               })
+```
+
+## Graphics with a method
+
+```{r, eval=FALSE}
+updatePlot <- function(h,...) {
+  x <- rnorm(50)
+  plot(density(x, adjust = svalue(bandwidthAdjust),
+               kernel = "gaussian"),main="Density plot")
+  rug(x)
+}
+## Add a slider to store a value
+bandwidthAdjust <- gslider(from=0,to=2,by=.01, value=1, 
+                           handler=updatePlot, container=group)
+
+```
 
 # Wrapping code
 
+## Hide variables in function
+
+```{r, eval=FALSE}
+library(gWidgets2)
+## Select the RGtk2 toolkit
+options(guiToolkit="RGtk2")
+myapp <- function() {
+  ## This function is essentially the constructor for a class. The
+  ## environment 'this' contains all member variables and functions of
+  ## the class. We do not need to refer to 'this' in the code, but we
+  ## will return it to facilitate debugging. 
+  this <- environment()
+  win <- gwindow("Hello World")
+  obj <- gbutton("Hello world", container = win,
+               handler=function(h, ...) {
+                 gmessage("Goodbye world")
+               })
+  return(invisible(list(env=this)))
+}
+```
+
 # Demo - Retistruct
 
+# Further Reading
+
+gWidgets vingette
+
+<!--  LocalWords:  gWidgets Sterratt th ioslides Verzani API GUIs GTK
+ -->
+<!--  LocalWords:  Tk RGtk RGtk Matlab sudo libgtk dev eval jverzani
+ -->
+<!--  LocalWords:  cairoDevice workspace pre MacOS MacPorts HomeBrew
+ -->
+<!--  LocalWords:  dropdown guiToolkit gwindow gbutton gmessage rnorm
+ -->
+<!--  LocalWords:  ggroup glabel gspinbutton svalue ggraphics
+ -->
+<!--  LocalWords:  gaussian Retistruct
+ -->
