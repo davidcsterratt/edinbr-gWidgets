@@ -15,7 +15,6 @@ d <- dev.cur()
 obj <- gbutton("Plot", container = group,
                handler=function(h, ...) {
                  x <- rnorm(50)
-                 plot(density(x, adjust=1, kernel="gaussian"),
-                      main="Density plot")
+                 plot(density(x, adjust=1, kernel="gaussian"))
                  rug(x)
                })
