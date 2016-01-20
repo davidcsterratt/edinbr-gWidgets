@@ -1,0 +1,142 @@
+---
+title: "gWidgets2, a GUI system for R"
+author: David C Sterratt
+date: 20th January, 2016
+output: ioslides_presentation
+---
+
+## What is gWidgets2?
+
+- gWidgets2 by John Verzani is a reworking of the earlier gWidgets package
+- Provides a toolkit-independent API for building interactive GUIs on
+  Windows, Mac and Linux
+- GTK2/3, Tk, Qt
+- At present GTK is the best supported toolkit on the three operating
+  systems
+- Requires gWidgetsRGtk2 and RGtk2 (Michael Lawrence)
+- Programatic design
+  - No GUI designer a la Matlab
+
+# Installation
+
+## Linux
+
+- Prerequisites: GTK2 development libraries
+- On Debian/Ubuntu at the command line:
+```
+sudo apt-get install libgtk2.0-dev
+```
+- In R:
+```{r, eval=FALSE}
+install.packages(c("gWidgets2RGtk2", "cairoDevice"))
+```
+
+## Windows
+
+```{r, eval=FALSE}
+install.packages(c("gWidgets2RGtk2", "cairoDevice"))
+library(gWidgets2RGtk2)
+```
+- There will be an error message saying that libatk-1.0-0.dll is missing
+  from  your  computer.
+- Click  on OK
+- Another  message  will  appear,  asking  if  you  want  to  install
+  GTK+.
+- Agree to this.
+- After this has finished, quit R (without saving the workspace image) and
+  restart.
+    
+## Mac
+
+- Pain! - GTK libraries not easy to install
+- Options:
+  - GTK binaries (should work for pre-Mavericks MacOS X)
+  - MacPorts
+  - HomeBrew
+- More details at:
+  https://github.com/davidcsterratt/retistruct/issues/4
+
+## Concepts
+
+- __Widgets__: buttons, radio buttons, dropdown lists,  sliders, edit boxes ...
+- __Container__: where to place a widget
+- __Handler__: how a widget resopnds to events, e.g. button presses
+- __Action__: extra information passed to a handler
+- __Method__: How to get and set widget values
+
+# Hello World
+
+## Hello World
+
+```{r, eval=FALSE}
+library(gWidgets2)
+## Select the RGtk2 toolkit
+options(guiToolkit="RGtk2")
+
+## Create a window called "Hello World"
+win <- gwindow("Hello World")
+
+## Create a "Hello world" button and make it do something using a
+## handler
+obj <- gbutton("Hello world", container=win,
+               handler=function(h, ...) {
+                 gmessage("Hello world")
+               })
+```
+
+- Note *widgets* (gbutton, gmessage), *container* and *handler*
+- Handler function has to be of form `function(h, ...)`
+
+## Goodbye world - groups
+
+```{r, eval=FALSE}
+library(gWidgets2)
+options(guiToolkit="RGtk2")
+win <- gwindow("Hello World, Goodbye world")
+
+## Create a ggroup to  put more than one Widget in
+group <- ggroup(horizontal=FALSE, container=win)
+
+## Create a "Hello world" button within the group we've just made
+hello <- gbutton("Hello world", container=group,
+               handler=function(h, ...) {
+                 gmessage("Hello world")
+               })
+## Add another button
+goodbye <- gbutton("Goodbye world", container=group,
+                   handler=function(h, ...) {
+                     gmessage("Goodbye world")
+               })
+```
+
+# Methods
+
+## Hello World x n
+
+```{r, eval=FALSE}
+library(gWidgets2)
+options(guiToolkit="RGtk2")
+win <- gwindow("Hello World times n")
+group <- ggroup(horizontal=FALSE, container=win)
+
+## Add a spinner in a group
+g.times <- ggroup(horizontal=TRUE, container=group)
+text <- glabel("How many times?", container=g.times)
+times <- gspinbutton(from=1, to=5, by=1, value=3, container=g.times)
+
+## The handler function calls the svalue method of the gspinbutton to
+## get the number of times
+hello <- gbutton("Hello world", container=group,
+                 handler=function(h, ...) {
+                   gmessage(rep("Hello world", svalue(times)))
+                 })
+```
+
+# Including graphics
+
+# Actions
+
+# Wrapping code
+
+# Demo - Retistruct
+
