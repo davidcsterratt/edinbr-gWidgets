@@ -190,7 +190,7 @@ myapp <- function() {
 
 # Demo - Retistruct
 
-# Further Reading
+## Further Reading
 
 gWidgets vingette
 
