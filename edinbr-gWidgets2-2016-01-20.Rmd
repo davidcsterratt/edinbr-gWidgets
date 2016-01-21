@@ -1,8 +1,9 @@
 ---
 title: "gWidgets2, a GUI system for R"
-author: David C Sterratt
+author: David C Sterratt (http://homepages.inf.ed.ac.uk/sterratt)
 date: 20th January, 2016
-output: ioslides_presentation
+output: 
+  ioslides_presentation
 ---
 
 ## What is gWidgets2?
@@ -38,7 +39,7 @@ devtools::install_github("jverzani/gWidgets2RGtk2")
 install.packages(c("gWidgets2RGtk2", "cairoDevice"))
 library(gWidgets2RGtk2)
 ```
-- There will be an error message saying that libatk-1.0-0.dll ismissing from your computer.
+- There will be an error message saying that libatk-1.0-0.dll is missing from your computer.
 - Click  on OK
 - Another  message  will  appear,  asking  if  you  want  to  install GTK+.
 - Agree to this.
@@ -192,7 +193,7 @@ myapp <- function() {
 
 ## Further Reading
 
-gWidgets vingette
+[gWidgets vingette](https://cran.r-project.org/web/packages/gWidgets/vignettes/gWidgets.pdf) - there is no gWidgets2 vingette yet, but gWidgets is very similar to gWidgets2
 
 <!--  LocalWords:  gWidgets Sterratt th ioslides Verzani API GUIs GTK
  -->
